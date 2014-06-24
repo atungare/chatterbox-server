@@ -51,7 +51,7 @@ var handleOptions = function( request, response, headers ) {
 var handleGet = function (request, response, headers) {
   if (request.url === '/' ||request.url[1] === '?') {
     headers['Content-Type'] = "text/html";
-    var html = fs.readFileSync('../client/index.html');
+    var html = fs.readFileSync('/Users/student/code/ajay-nick/2014-06-chatterbox-server/client/index.html');
     response.writeHead(200, headers);
     response.end(html);
     headers['Content-Type'] = "text/plain";
@@ -67,7 +67,7 @@ var handleGet = function (request, response, headers) {
     var filetype = last(request.url.split('.'));
     if (filetype === 'js') {filetype = "javascript";}
     headers['Content-Type'] = "text/" + filetype;
-    var file = fs.readFileSync('..' + request.url);
+    var file = fs.readFileSync('/Users/student/code/ajay-nick/2014-06-chatterbox-server/' + request.url);
     response.writeHead(200, headers);
     response.end(file);
     headers['Content-Type'] = "text/plain";

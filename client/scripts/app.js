@@ -96,7 +96,6 @@ $(function(){
   };
 
   app.handleSubmit = function(message) {
-    console.log(message);
     return app.send({
       message: message,
       username: app.currentUser || "John Doe",

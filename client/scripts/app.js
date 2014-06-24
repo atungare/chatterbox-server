@@ -16,15 +16,10 @@ $.ajax({
 
 var response;
 var roomNames = [];
-var ajaxParams = {
-  limit: 1000,
-  sort: "createdAt",
-  skip: 0
-};
 
 var app = {};
 
-app.server = "https://api.parse.com/1/classes/chatterbox";
+app.server = "http://127.0.0.1:3000/classes/messages";
 app.currentUser = null;
 app.currentRoom = null;
 
@@ -37,19 +32,29 @@ $(function(){
       app.addFriend( $(this).html() );
     });
 
-    $("#send").on("submit", ".submit", function(){
-      app.handleSubmit($("#message").val());
+    $("#send").on("click", ".submit", function(){
+      app.handleSubmit($(".message").val());
+      $(".message").val("");
     });
 
-    this.fetch().then(function(json){
-      app.addAllMessages({messages: json.results});
-      _.each(json.results, function(element) {
-        roomNames.push(element["roomname"]);
-      });
-      roomNames = _.uniq(roomNames);
-      // console.log(roomNames);
-      app.addAllRooms(roomNames);
+    $(".message").keydown( function( evt ) {
+      if ( evt.which === 13 ) {
+        $("#send .submit").click();
+      }
     });
+
+    setInterval( function(){
+      app.fetch().then( function(json){
+        json = JSON.parse(json);
+        app.addAllMessages(json.results);
+        // _.each(json.results, function(element) {
+        //   roomNames.push(element["roomname"]);
+        // });
+        // roomNames = _.uniq(roomNames);
+        // console.log(roomNames);
+        // app.addAllRooms(roomNames);
+      });
+    }, 1000);
   };
 
   app.send = function(data){
@@ -57,7 +62,6 @@ $(function(){
       url: this.server,
       type: "POST",
       data: JSON.stringify(data),
-      contentType: 'application/json',
       success: function(){
         console.log("Ajax FTW");
       }
@@ -67,15 +71,15 @@ $(function(){
   app.fetch = function() {
     return $.ajax({
       url: this.server,
-      type: "GET",
-      data: ajaxParams,
+      type: "GET"
     });
   };
 
   app.addAllMessages = function(messages){
-    var temp = messages["messages"];
-    messages["messages"] = temp.reverse();
-    $(".message-list").append(messageListTemplate(messages));
+    $(".message-list").children().detach();
+    if (messages.length) {
+      $(".message-list").append(messageListTemplate({messages: messages}));
+    }
   };
 
   app.clearMessages = function(){
@@ -92,8 +96,9 @@ $(function(){
   };
 
   app.handleSubmit = function(message) {
+    console.log(message);
     return app.send({
-      text: message,
+      message: message,
       username: app.currentUser || "John Doe",
     });
   };

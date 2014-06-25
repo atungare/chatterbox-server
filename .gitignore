@@ -27,5 +27,11 @@ logs
 results
 
 npm-debug.log
-node_modules
-client/bower_components
+
+chatterbox-node/client/bower_components
+chatterbox-express/public/bower_components
+
+chatterbox-express/node_modules
+chatterbox-node/node_modules
+
+

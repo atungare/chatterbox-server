@@ -49,7 +49,7 @@ var handleOptions = function( request, response, headers ) {
 };
 
 var handleGet = function (request, response, headers) {
-  if (request.url === '/' ||request.url[1] === '?') {
+  if (request.url === '/' || request.url[1] === '?') {
     headers['Content-Type'] = "text/html";
     var html = fs.readFileSync('/Users/student/code/ajay-nick/2014-06-chatterbox-server/client/index.html');
     response.writeHead(200, headers);
